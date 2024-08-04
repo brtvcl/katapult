@@ -22,11 +22,10 @@ function App() {
 
   function handleSpeedChange(kmh, timestamp) {
     const baseSpeed = Math.max(Math.floor(kmh / 10) * 10, 1);
-    const prevBaseSpeed = Math.max(Math.floor(kmh / 10) * 10, 1);
+    const prevBaseSpeed = Math.max(Math.floor(prevSpeed.current / 10) * 10, 1);
 
     let sign = "=";
 
-    console.log(baseSpeed, prevSpeed.current, kmh);
     if (baseSpeed > prevSpeed.current && kmh >= baseSpeed) {
       sign = ">";
     }
@@ -34,17 +33,20 @@ function App() {
       sign = "<";
     }
 
-    if (sign !== "=") {
-      console.log(sign, baseSpeed);
-    }
-
     if (currentRun[`${sign}${baseSpeed}`] == 0) {
-      setCurrentRun({ ...currentRun, [`${sign}${baseSpeed}`]: timestamp });
-    }
+      let baseSpeedToSave = sign == "<" ? prevBaseSpeed : baseSpeed;
+      let runUpdate = {
+        ...currentRun,
+        [`${sign}${baseSpeedToSave}`]: timestamp,
+      };
 
-    if (`${sign}${baseSpeed}` == "<1") {
-      setRuns([...runs, currentRun]);
-      setCurrentRun(getRunObject());
+      if (`${sign}${baseSpeedToSave}` == "<1") {
+        setRuns([...runs, runUpdate]);
+        setCurrentRun(getRunObject());
+        return;
+      }
+
+      setCurrentRun(runUpdate);
     }
 
     prevSpeed.current = kmh;

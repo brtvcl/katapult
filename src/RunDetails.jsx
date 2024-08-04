@@ -13,7 +13,7 @@ function RunDetails({ run }) {
     }, 0);
 
   const zeroToMaxTime = run[`>${maxSpeed}`] - run[">1"];
-  const maxToZeroTime = run[`<${maxSpeed}`] - run["<1"];
+  const maxToZeroTime = run["<1"] - run[`<${maxSpeed}`];
 
   return (
     <div>
